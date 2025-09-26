@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Learning Peradilan Agama</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 to-teal-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b-4 border-emerald-600">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">E-Learning Peradilan Agama</h1>
+                        <p class="text-sm text-gray-600">Platform Pembelajaran & Evaluasi</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex space-x-2">
+                        <button onclick="switchToAdmin()" id="admin-btn" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                            👨‍💼 Admin
+                        </button>
+                        <button onclick="switchToParticipant()" id="participant-btn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors">
+                            👤 Peserta
+                        </button>
+                    </div>
+                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                        <span class="text-emerald-700 font-semibold" id="user-initial">AH</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Navigation -->
+    <nav id="admin-nav" class="bg-emerald-600 text-white shadow-md">
+        <div class="container mx-auto px-6">
+            <div class="flex space-x-8">
+                <button onclick="showSection('dashboard')" class="nav-btn py-4 px-6 hover:bg-emerald-700 transition-colors border-b-2 border-emerald-400">
+                    📊 Dashboard
+                </button>
+                <button onclick="showSection('create-quiz')" class="nav-btn py-4 px-6 hover:bg-emerald-700 transition-colors">
+                    ➕ Buat Soal
+                </button>
+                <button onclick="showSection('quiz-library')" class="nav-btn py-4 px-6 hover:bg-emerald-700 transition-colors">
+                    📚 Bank Soal
+                </button>
+                <button onclick="showSection('results-view')" class="nav-btn py-4 px-6 hover:bg-emerald-700 transition-colors">
+                    📊 Hasil Peserta
+                </button>
+                <button onclick="showSection('share-quiz')" class="nav-btn py-4 px-6 hover:bg-emerald-700 transition-colors">
+                    🔗 Bagikan Link Ujian
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Participant Navigation -->
+    <nav id="participant-nav" class="bg-emerald-600 text-white shadow-md hidden">
+        <div class="container mx-auto px-6">
+            <div class="flex space-x-8">
+                <button onclick="showSection('participant-form')" class="nav-btn py-4 px-6 hover:bg-emerald-700 transition-colors border-b-2 border-emerald-400">
+                    📝 Mulai Ujian
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Total Soal</p>
+                            <p class="text-3xl font-bold text-blue-600" id="total-questions">12</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">📝</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Peserta Aktif</p>
+                            <p class="text-3xl font-bold text-green-600">28</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">👥</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Rapat Selesai</p>
+                            <p class="text-3xl font-bold text-purple-600">5</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">✅</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">📋 Aktivitas Terbaru</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <span class="text-green-500">✅</span>
+                            <div>
+                                <p class="font-medium">Soal "Hukum Waris Islam" dibuat</p>
+                                <p class="text-sm text-gray-600">2 jam yang lalu</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <span class="text-blue-500">📤</span>
+                            <div>
+                                <p class="font-medium">Hasil rapat dibagikan ke 15 rekan</p>
+                                <p class="text-sm text-gray-600">5 jam yang lalu</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <span class="text-purple-500">👥</span>
+                            <div>
+                                <p class="font-medium">Rapat evaluasi selesai</p>
+                                <p class="text-sm text-gray-600">1 hari yang lalu</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">🎯 Topik Populer</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-emerald-50 rounded-lg">
+                            <span class="font-medium">Hukum Keluarga</span>
+                            <span class="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm">8 soal</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                            <span class="font-medium">Hukum Waris</span>
+                            <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">6 soal</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                            <span class="font-medium">Hukum Muamalah</span>
+                            <span class="bg-purple-600 text-white px-3 py-1 rounded-full text-sm">4 soal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Quiz Section -->
+        <div id="create-quiz" class="section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">➕ Buat Soal Baru</h2>
+                
+                <form id="quiz-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Judul Soal</label>
+                            <input type="text" id="quiz-title" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Contoh: Evaluasi Hukum Waris Islam">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                            <select id="quiz-category" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="">Pilih Kategori</option>
+                                <option value="hukum-keluarga">Hukum Keluarga</option>
+                                <option value="hukum-waris">Hukum Waris</option>
+                                <option value="hukum-muamalah">Hukum Muamalah</option>
+                                <option value="prosedur-peradilan">Prosedur Peradilan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                        <textarea id="quiz-description" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Jelaskan tujuan dan konteks soal ini..."></textarea>
+                    </div>
+
+                    <div id="questions-container">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Pertanyaan</h3>
+                            <button type="button" onclick="addQuestion()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                                + Tambah Pertanyaan
+                            </button>
+                        </div>
+                        
+                        <div class="question-item bg-gray-50 rounded-lg p-6 mb-4">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pertanyaan 1</label>
+                                <textarea class="question-text w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" rows="2" placeholder="Tulis pertanyaan di sini..."></textarea>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan A</label>
+                                    <input type="text" class="option-a w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Pilihan A">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan B</label>
+                                    <input type="text" class="option-b w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Pilihan B">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan C</label>
+                                    <input type="text" class="option-c w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Pilihan C">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan D</label>
+                                    <input type="text" class="option-d w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Pilihan D">
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Jawaban Benar</label>
+                                <select class="correct-answer w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                    <option value="">Pilih jawaban benar</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-4">
+                        <button type="submit" class="bg-emerald-600 text-white px-8 py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium">
+                            💾 Simpan Soal
+                        </button>
+                        <button type="button" onclick="previewQuiz()" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                            👁️ Preview
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quiz Library Section -->
+        <div id="quiz-library" class="section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">📚 Bank Soal</h2>
+                    <div class="flex space-x-3">
+                        <input type="text" placeholder="Cari soal..." class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="">Semua Kategori</option>
+                            <option value="hukum-keluarga">Hukum Keluarga</option>
+                            <option value="hukum-waris">Hukum Waris</option>
+                            <option value="hukum-muamalah">Hukum Muamalah</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="quiz-list" class="space-y-4">
+                    <div class="quiz-card border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-800">Evaluasi Hukum Waris Islam</h3>
+                                <p class="text-gray-600 mt-1">Soal evaluasi tentang pembagian harta warisan menurut hukum Islam</p>
+                                <div class="flex items-center space-x-4 mt-3">
+                                    <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm">Hukum Waris</span>
+                                    <span class="text-gray-500 text-sm">5 pertanyaan</span>
+                                    <span class="text-gray-500 text-sm">Dibuat: 2 hari lalu</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="editQuiz(1)" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    ✏️ Edit
+                                </button>
+                                <button onclick="shareQuiz(1)" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                    📤 Bagikan
+                                </button>
+                                <button onclick="deleteQuiz(1)" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                                    🗑️ Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-card border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-800">Prosedur Sidang Perceraian</h3>
+                                <p class="text-gray-600 mt-1">Evaluasi pemahaman tentang tata cara dan prosedur sidang perceraian</p>
+                                <div class="flex items-center space-x-4 mt-3">
+                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">Hukum Keluarga</span>
+                                    <span class="text-gray-500 text-sm">8 pertanyaan</span>
+                                    <span class="text-gray-500 text-sm">Dibuat: 1 minggu lalu</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="editQuiz(2)" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    ✏️ Edit
+                                </button>
+                                <button onclick="shareQuiz(2)" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                    📤 Bagikan
+                                </button>
+                                <button onclick="deleteQuiz(2)" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                                    🗑️ Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participant Form Section -->
+        <div id="participant-form" class="section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">📝 Form Identitas Peserta</h2>
+                    <p class="text-gray-600">Mohon lengkapi data diri sebelum memulai ujian</p>
+                </div>
+                
+                <form id="participant-identity-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
+                            <input type="text" id="participant-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Masukkan nama lengkap">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">NIP *</label>
+                            <input type="text" id="participant-nip" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Masukkan NIP">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Satuan Kerja *</label>
+                            <select id="participant-satker" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="">Pilih Satuan Kerja</option>
+                                <option value="PA Jakarta Pusat">PA Jakarta Pusat</option>
+                                <option value="PA Jakarta Selatan">PA Jakarta Selatan</option>
+                                <option value="PA Jakarta Utara">PA Jakarta Utara</option>
+                                <option value="PA Jakarta Barat">PA Jakarta Barat</option>
+                                <option value="PA Jakarta Timur">PA Jakarta Timur</option>
+                                <option value="PTA Jakarta">PTA Jakarta</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Unit Kerja *</label>
+                            <select id="participant-unit" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="">Pilih Unit Kerja</option>
+                                <option value="Kepaniteraan">Kepaniteraan</option>
+                                <option value="Kesekretariatan">Kesekretariatan</option>
+                                <option value="Hakim">Hakim</option>
+                                <option value="Panitera Pengganti">Panitera Pengganti</option>
+                                <option value="Jurusita">Jurusita</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jabatan *</label>
+                        <input type="text" id="participant-position" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Contoh: Hakim, Panitera, Jurusita, dll">
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h3 class="font-semibold text-blue-800 mb-2">ℹ️ Informasi Ujian</h3>
+                        <ul class="text-blue-700 text-sm space-y-1">
+                            <li>• Jumlah soal: <strong>Sesuai soal yang dibuat admin</strong></li>
+                            <li>• Waktu pengerjaan: <strong>1 menit per soal</strong></li>
+                            <li>• Soal berupa pilihan ganda (A, B, C, D)</li>
+                            <li>• Pastikan koneksi internet stabil</li>
+                        </ul>
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-600 text-white py-4 rounded-lg hover:bg-emerald-700 transition-colors font-medium text-lg">
+                        🚀 Mulai Ujian
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quiz Taking Section -->
+        <div id="quiz-taking" class="section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <!-- Timer -->
+                <div class="flex items-center justify-between mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800" id="quiz-title-display">Ujian E-Learning</h2>
+                        <p class="text-gray-600" id="quiz-info-display">Pilihan Ganda</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-red-600" id="timer">00:00</div>
+                        <p class="text-sm text-red-600">Waktu Tersisa</p>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm text-gray-600">Progress</span>
+                        <span class="text-sm text-gray-600" id="progress-text">1 dari 20</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progress-bar" class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: 5%"></div>
+                    </div>
+                </div>
+
+                <!-- Question -->
+                <div id="question-container" class="mb-8">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4" id="question-number">Pertanyaan 1</h3>
+                        <p class="text-gray-700 leading-relaxed" id="question-text">
+                            Dalam hukum waris Islam, bagian yang diterima oleh anak laki-laki dibandingkan dengan anak perempuan adalah...
+                        </p>
+                    </div>
+
+                    <div class="space-y-3" id="options-container">
+                        <label class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="answer" value="A" class="text-emerald-600">
+                            <span>A. Sama besar (1:1)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="answer" value="B" class="text-emerald-600">
+                            <span>B. Dua kali lipat (2:1)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="answer" value="C" class="text-emerald-600">
+                            <span>C. Tiga kali lipat (3:1)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="answer" value="D" class="text-emerald-600">
+                            <span>D. Setengah bagian (1:2)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between">
+                    <button onclick="previousQuestion()" id="prev-btn" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition-colors" disabled>
+                        ← Sebelumnya
+                    </button>
+                    <button onclick="nextQuestion()" id="next-btn" class="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors">
+                        Selanjutnya →
+                    </button>
+                    <button onclick="finishQuiz()" id="finish-btn" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors hidden">
+                        Selesai Ujian
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Completed Section -->
+        <div id="quiz-completed" class="section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto text-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-4xl">✅</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Ujian Selesai!</h2>
+                <p class="text-gray-600 mb-6">Terima kasih telah mengikuti ujian. Jawaban Anda telah tersimpan dan akan diperiksa oleh admin.</p>
+                
+                <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                    <h3 class="font-semibold text-gray-800 mb-4">Ringkasan Ujian</h3>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-600">Nama</p>
+                            <p class="font-medium" id="summary-name">-</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">NIP</p>
+                            <p class="font-medium" id="summary-nip">-</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Waktu Selesai</p>
+                            <p class="font-medium" id="summary-time">-</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Soal Dijawab</p>
+                            <p class="font-medium" id="summary-answered">20/20</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-sm text-gray-500">Hasil ujian akan diumumkan setelah evaluasi oleh admin.</p>
+            </div>
+        </div>
+
+        <!-- Results View Section (Admin Only) -->
+        <div id="results-view" class="section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">📊 Hasil Ujian Peserta</h2>
+                    <div class="flex space-x-3">
+                        <input type="text" placeholder="Cari peserta..." class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        <button onclick="exportResults()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                            📥 Export Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-200">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="border border-gray-200 px-4 py-3 text-left">No</th>
+                                <th class="border border-gray-200 px-4 py-3 text-left">Nama</th>
+                                <th class="border border-gray-200 px-4 py-3 text-left">NIP</th>
+                                <th class="border border-gray-200 px-4 py-3 text-left">Satuan Kerja</th>
+                                <th class="border border-gray-200 px-4 py-3 text-left">Jabatan</th>
+                                <th class="border border-gray-200 px-4 py-3 text-left">Skor</th>
+                                <th class="border border-gray-200 px-4 py-3 text-left">Waktu</th>
+                                <th class="border border-gray-200 px-4 py-3 text-left">Status</th>
+                                <th class="border border-gray-200 px-4 py-3 text-left">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-table-body">
+                            <tr>
+                                <td class="border border-gray-200 px-4 py-3">1</td>
+                                <td class="border border-gray-200 px-4 py-3">Ahmad Hakim</td>
+                                <td class="border border-gray-200 px-4 py-3">196801011990031001</td>
+                                <td class="border border-gray-200 px-4 py-3">PA Jakarta Pusat</td>
+                                <td class="border border-gray-200 px-4 py-3">Hakim</td>
+                                <td class="border border-gray-200 px-4 py-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded">85/100</span></td>
+                                <td class="border border-gray-200 px-4 py-3">18:30</td>
+                                <td class="border border-gray-200 px-4 py-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Selesai</span></td>
+                                <td class="border border-gray-200 px-4 py-3">
+                                    <button onclick="viewDetailResult(1)" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">Detail</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 px-4 py-3">2</td>
+                                <td class="border border-gray-200 px-4 py-3">Siti Fatimah</td>
+                                <td class="border border-gray-200 px-4 py-3">197205151995032002</td>
+                                <td class="border border-gray-200 px-4 py-3">PA Jakarta Selatan</td>
+                                <td class="border border-gray-200 px-4 py-3">Panitera</td>
+                                <td class="border border-gray-200 px-4 py-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">75/100</span></td>
+                                <td class="border border-gray-200 px-4 py-3">19:45</td>
+                                <td class="border border-gray-200 px-4 py-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Selesai</span></td>
+                                <td class="border border-gray-200 px-4 py-3">
+                                    <button onclick="viewDetailResult(2)" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">Detail</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-200 px-4 py-3">3</td>
+                                <td class="border border-gray-200 px-4 py-3">Muhammad Ali</td>
+                                <td class="border border-gray-200 px-4 py-3">198003101999031003</td>
+                                <td class="border border-gray-200 px-4 py-3">PA Jakarta Utara</td>
+                                <td class="border border-gray-200 px-4 py-3">Jurusita</td>
+                                <td class="border border-gray-200 px-4 py-3"><span class="bg-red-100 text-red-800 px-2 py-1 rounded">-</span></td>
+                                <td class="border border-gray-200 px-4 py-3">-</td>
+                                <td class="border border-gray-200 px-4 py-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">Sedang Ujian</span></td>
+                                <td class="border border-gray-200 px-4 py-3">
+                                    <button class="bg-gray-400 text-white px-3 py-1 rounded text-sm cursor-not-allowed" disabled>Menunggu</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Quiz Section -->
+        <div id="share-quiz" class="section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">🔗 Bagikan Link Ujian</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Pilih Soal untuk Dibagikan</h3>
+                        <div class="space-y-3 max-h-96 overflow-y-auto">
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="selected-quiz" value="1" class="text-emerald-600">
+                                <div>
+                                    <p class="font-medium">Evaluasi Hukum Waris Islam</p>
+                                    <p class="text-sm text-gray-600">20 pertanyaan • Hukum Waris • 20 menit</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="selected-quiz" value="2" class="text-emerald-600">
+                                <div>
+                                    <p class="font-medium">Prosedur Sidang Perceraian</p>
+                                    <p class="text-sm text-gray-600">20 pertanyaan • Hukum Keluarga • 20 menit</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="selected-quiz" value="3" class="text-emerald-600">
+                                <div>
+                                    <p class="font-medium">Hukum Jual Beli dalam Islam</p>
+                                    <p class="text-sm text-gray-600">20 pertanyaan • Hukum Muamalah • 20 menit</p>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <button onclick="generateQuizLink()" class="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium">
+                                🔗 Generate Link Ujian
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Link Ujian</h3>
+                        <div id="quiz-link-container" class="hidden">
+                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Link Ujian:</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="text" id="quiz-link" readonly class="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm" value="">
+                                    <button onclick="copyQuizLink()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                        📋 Salin
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                                <h4 class="font-semibold text-blue-800 mb-2">📋 Instruksi untuk Peserta:</h4>
+                                <ul class="text-blue-700 text-sm space-y-1">
+                                    <li>• Klik link di atas untuk memulai ujian</li>
+                                    <li>• Isi form identitas dengan lengkap</li>
+                                    <li>• Pastikan koneksi internet stabil</li>
+                                    <li>• Waktu ujian: 1 menit per soal</li>
+                                    <li>• Ujian tidak dapat diulang setelah selesai</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Bagikan Via:</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="shareViaWhatsApp()" class="flex items-center justify-center space-x-2 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-colors">
+                                    <span>📱</span>
+                                    <span>WhatsApp</span>
+                                </button>
+                                <button onclick="shareViaEmail()" class="flex items-center justify-center space-x-2 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                                    <span>📧</span>
+                                    <span>Email</span>
+                                </button>
+                                <button onclick="shareViaTelegram()" class="flex items-center justify-center space-x-2 bg-sky-500 text-white py-3 rounded-lg hover:bg-sky-600 transition-colors">
+                                    <span>✈️</span>
+                                    <span>Telegram</span>
+                                </button>
+                                <button onclick="downloadQRCode()" class="flex items-center justify-center space-x-2 bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                                    <span>📱</span>
+                                    <span>QR Code</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Quiz Links -->
+            <div class="bg-white rounded-xl shadow-lg p-8 mt-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">🔗 Link Ujian Aktif</h3>
+                <div class="space-y-4">
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-800">Evaluasi Hukum Waris Islam</h4>
+                                <p class="text-sm text-gray-600 mb-2">Link: https://elearning-pa.go.id/quiz/abc123</p>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                    <span>👥 15 peserta terdaftar</span>
+                                    <span>✅ 8 selesai ujian</span>
+                                    <span>⏱️ Dibuat: 2 hari lalu</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="viewQuizStats(1)" class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                    📊 Statistik
+                                </button>
+                                <button onclick="deactivateQuizLink(1)" class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm">
+                                    🚫 Nonaktifkan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-800">Prosedur Sidang Perceraian</h4>
+                                <p class="text-sm text-gray-600 mb-2">Link: https://elearning-pa.go.id/quiz/def456</p>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                    <span>👥 22 peserta terdaftar</span>
+                                    <span>✅ 18 selesai ujian</span>
+                                    <span>⏱️ Dibuat: 1 minggu lalu</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="viewQuizStats(2)" class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                    📊 Statistik
+                                </button>
+                                <button onclick="deactivateQuizLink(2)" class="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm">
+                                    🚫 Nonaktifkan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md mx-4 fade-in">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-3xl">✅</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Berhasil!</h3>
+                <p id="success-message" class="text-gray-600 mb-6">Operasi berhasil dilakukan.</p>
+                <button onclick="closeModal()" class="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let questionCount = 1;
+        let quizzes = [];
+        let currentUser = 'admin'; // 'admin' or 'participant'
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let quizTimer = null;
+        let timeRemaining = 1200; // 20 minutes in seconds
+        let participantData = {};
+
+        // Quiz questions will be loaded from admin-created quizzes
+        let currentQuizQuestions = [];
+
+        // User switching functions
+        function switchToAdmin() {
+            currentUser = 'admin';
+            document.getElementById('admin-btn').className = 'bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors';
+            document.getElementById('participant-btn').className = 'bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors';
+            document.getElementById('user-initial').textContent = 'AH';
+            document.getElementById('admin-nav').classList.remove('hidden');
+            document.getElementById('participant-nav').classList.add('hidden');
+            showSection('dashboard');
+        }
+
+        function switchToParticipant() {
+            currentUser = 'participant';
+            document.getElementById('participant-btn').className = 'bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors';
+            document.getElementById('admin-btn').className = 'bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors';
+            document.getElementById('user-initial').textContent = 'PS';
+            document.getElementById('admin-nav').classList.add('hidden');
+            document.getElementById('participant-nav').classList.remove('hidden');
+            showSection('participant-form');
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Remove active state from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-b-2', 'border-emerald-400');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Add active state to clicked nav button
+            if (event && event.target) {
+                event.target.classList.add('border-b-2', 'border-emerald-400');
+            }
+        }
+
+        // Add new question
+        function addQuestion() {
+            questionCount++;
+            const container = document.getElementById('questions-container');
+            const questionHtml = `
+                <div class="question-item bg-gray-50 rounded-lg p-6 mb-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Pertanyaan ${questionCount}</label>
+                        <button type="button" onclick="removeQuestion(this)" class="text-red-600 hover:text-red-800">
+                            🗑️ Hapus
+                        </button>
+                    </div>
+                    <textarea class="question-text w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 mb-4" rows="2" placeholder="Tulis pertanyaan di sini..."></textarea>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan A</label>
+                            <input type="text" class="option-a w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Pilihan A">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan B</label>
+                            <input type="text" class="option-b w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Pilihan B">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan C</label>
+                            <input type="text" class="option-c w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Pilihan C">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilihan D</label>
+                            <input type="text" class="option-d w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Pilihan D">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jawaban Benar</label>
+                        <select class="correct-answer w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            <option value="">Pilih jawaban benar</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', questionHtml);
+        }
+
+        // Remove question
+        function removeQuestion(button) {
+            button.closest('.question-item').remove();
+        }
+
+        // Save quiz
+        document.getElementById('quiz-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('quiz-title').value;
+            const category = document.getElementById('quiz-category').value;
+            const description = document.getElementById('quiz-description').value;
+            
+            if (!title || !category) {
+                alert('Mohon lengkapi judul dan kategori soal!');
+                return;
+            }
+
+            const questions = [];
+            document.querySelectorAll('.question-item').forEach(item => {
+                const questionText = item.querySelector('.question-text').value;
+                const optionA = item.querySelector('.option-a').value;
+                const optionB = item.querySelector('.option-b').value;
+                const optionC = item.querySelector('.option-c').value;
+                const optionD = item.querySelector('.option-d').value;
+                const correctAnswer = item.querySelector('.correct-answer').value;
+                
+                if (questionText && optionA && optionB && optionC && optionD && correctAnswer) {
+                    questions.push({
+                        question: questionText,
+                        options: { A: optionA, B: optionB, C: optionC, D: optionD },
+                        correct: correctAnswer
+                    });
+                }
+            });
+
+            if (questions.length === 0) {
+                alert('Mohon tambahkan minimal satu pertanyaan yang lengkap!');
+                return;
+            }
+
+            // Save quiz (in real app, this would be sent to server)
+            const newQuiz = {
+                id: Date.now(),
+                title,
+                category,
+                description,
+                questions,
+                created: new Date().toLocaleDateString('id-ID')
+            };
+            
+            quizzes.push(newQuiz);
+            
+            // Update total questions counter
+            document.getElementById('total-questions').textContent = 
+                quizzes.reduce((total, quiz) => total + quiz.questions.length, 12);
+            
+            showSuccessModal('Soal berhasil disimpan! Anda dapat melihatnya di Bank Soal.');
+            
+            // Reset form
+            document.getElementById('quiz-form').reset();
+            questionCount = 1;
+            
+            // Remove extra questions, keep only the first one
+            const questionItems = document.querySelectorAll('.question-item');
+            for (let i = 1; i < questionItems.length; i++) {
+                questionItems[i].remove();
+            }
+        });
+
+        // Preview quiz
+        function previewQuiz() {
+            const title = document.getElementById('quiz-title').value;
+            if (!title) {
+                alert('Mohon isi judul soal terlebih dahulu!');
+                return;
+            }
+            
+            showSuccessModal('Fitur preview akan menampilkan soal seperti yang dilihat peserta.');
+        }
+
+        // Quiz management functions
+        function editQuiz(id) {
+            showSuccessModal('Membuka editor untuk soal yang dipilih...');
+        }
+
+        function shareQuiz(id) {
+            showSection('share-quiz');
+            // Update nav button active state
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-b-2', 'border-emerald-400');
+            });
+            document.querySelector('[onclick="showSection(\'share-quiz\')"]').classList.add('border-b-2', 'border-emerald-400');
+        }
+
+        function deleteQuiz(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus soal ini?')) {
+                showSuccessModal('Soal berhasil dihapus dari bank soal.');
+            }
+        }
+
+        // Quiz link sharing functions
+        function generateQuizLink() {
+            const selectedQuiz = document.querySelector('input[name="selected-quiz"]:checked');
+            if (!selectedQuiz) {
+                alert('Mohon pilih soal yang akan dibagikan!');
+                return;
+            }
+            
+            // Generate unique link
+            const quizId = selectedQuiz.value;
+            const linkId = Math.random().toString(36).substring(2, 8);
+            const quizLink = `https://elearning-pa.go.id/quiz/${linkId}`;
+            
+            // Show link container
+            document.getElementById('quiz-link-container').classList.remove('hidden');
+            document.getElementById('quiz-link').value = quizLink;
+            
+            showSuccessModal('Link ujian berhasil dibuat! Anda dapat menyalin dan membagikannya kepada peserta.');
+        }
+
+        function copyQuizLink() {
+            const linkInput = document.getElementById('quiz-link');
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                document.execCommand('copy');
+                showSuccessModal('Link berhasil disalin ke clipboard!');
+            } catch (err) {
+                // Fallback for browsers that don't support execCommand
+                navigator.clipboard.writeText(linkInput.value).then(() => {
+                    showSuccessModal('Link berhasil disalin ke clipboard!');
+                }).catch(() => {
+                    alert('Gagal menyalin link. Silakan salin manual.');
+                });
+            }
+        }
+
+        function shareViaWhatsApp() {
+            const link = document.getElementById('quiz-link').value;
+            if (!link) {
+                alert('Mohon generate link ujian terlebih dahulu!');
+                return;
+            }
+            
+            const message = `🎓 *Ujian E-Learning Peradilan Agama*\n\nAnda diundang untuk mengikuti ujian online.\n\n📝 Link Ujian: ${link}\n\n⏰ Waktu: 1 menit per soal\n📊 Jumlah soal: Sesuai yang dibuat admin\n\n*Petunjuk:*\n• Klik link di atas\n• Isi form identitas dengan lengkap\n• Pastikan koneksi internet stabil\n• Ujian tidak dapat diulang\n\nTerima kasih!`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        function shareViaEmail() {
+            const link = document.getElementById('quiz-link').value;
+            if (!link) {
+                alert('Mohon generate link ujian terlebih dahulu!');
+                return;
+            }
+            
+            const subject = 'Undangan Ujian E-Learning Peradilan Agama';
+            const body = `Yth. Bapak/Ibu,
+
+Anda diundang untuk mengikuti ujian online E-Learning Peradilan Agama.
+
+Link Ujian: ${link}
+
+Informasi Ujian:
+- Waktu pengerjaan: 1 menit per soal
+- Jumlah soal: Sesuai yang dibuat admin
+- Ujian tidak dapat diulang setelah selesai
+
+Petunjuk:
+1. Klik link di atas untuk memulai ujian
+2. Isi form identitas dengan lengkap dan benar
+3. Pastikan koneksi internet stabil selama ujian
+4. Jawab semua pertanyaan sebelum waktu habis
+
+Terima kasih atas partisipasinya.
+
+Hormat kami,
+Admin E-Learning Peradilan Agama`;
+            
+            const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(mailtoUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        function shareViaTelegram() {
+            const link = document.getElementById('quiz-link').value;
+            if (!link) {
+                alert('Mohon generate link ujian terlebih dahulu!');
+                return;
+            }
+            
+            const message = `🎓 *Ujian E-Learning Peradilan Agama*\n\nAnda diundang untuk mengikuti ujian online.\n\n📝 Link Ujian: ${link}\n\n⏰ Waktu: 1 menit per soal\n📊 Jumlah soal: Sesuai yang dibuat admin\n\n*Petunjuk:*\n• Klik link di atas\n• Isi form identitas dengan lengkap\n• Pastikan koneksi internet stabil\n• Ujian tidak dapat diulang\n\nTerima kasih!`;
+            const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(message)}`;
+            window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        function downloadQRCode() {
+            const link = document.getElementById('quiz-link').value;
+            if (!link) {
+                alert('Mohon generate link ujian terlebih dahulu!');
+                return;
+            }
+            
+            showSuccessModal('QR Code untuk link ujian akan diunduh. Peserta dapat memindai QR Code untuk mengakses ujian.');
+        }
+
+        function viewQuizStats(id) {
+            showSuccessModal('Menampilkan statistik detail ujian: jumlah peserta, rata-rata skor, dan analisis jawaban.');
+        }
+
+        function deactivateQuizLink(id) {
+            if (confirm('Apakah Anda yakin ingin menonaktifkan link ujian ini? Peserta tidak akan dapat mengakses ujian lagi.')) {
+                showSuccessModal('Link ujian berhasil dinonaktifkan.');
+            }
+        }
+
+        // Modal functions
+        function showSuccessModal(message) {
+            document.getElementById('success-message').textContent = message;
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('success-modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+            document.getElementById('success-modal').classList.remove('flex');
+        }
+
+        // Participant form submission
+        document.getElementById('participant-identity-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            participantData = {
+                name: document.getElementById('participant-name').value,
+                nip: document.getElementById('participant-nip').value,
+                satker: document.getElementById('participant-satker').value,
+                unit: document.getElementById('participant-unit').value,
+                position: document.getElementById('participant-position').value
+            };
+            
+            // Start quiz
+            startQuiz();
+        });
+
+        // Quiz functions
+        function startQuiz() {
+            // Check if there are any quizzes available
+            if (quizzes.length === 0) {
+                alert('Belum ada soal yang tersedia. Silakan hubungi admin untuk membuat soal terlebih dahulu.');
+                return;
+            }
+            
+            // Use the first available quiz (in real app, this would be selected based on the link)
+            const selectedQuiz = quizzes[0];
+            currentQuizQuestions = selectedQuiz.questions;
+            
+            if (currentQuizQuestions.length === 0) {
+                alert('Soal yang dipilih belum memiliki pertanyaan. Silakan hubungi admin.');
+                return;
+            }
+            
+            // Update quiz display info
+            document.getElementById('quiz-title-display').textContent = selectedQuiz.title;
+            document.getElementById('quiz-info-display').textContent = `${currentQuizQuestions.length} Pertanyaan • Pilihan Ganda`;
+            
+            currentQuestionIndex = 0;
+            userAnswers = new Array(currentQuizQuestions.length).fill(null);
+            timeRemaining = currentQuizQuestions.length * 60; // 1 minute per question
+            
+            showSection('quiz-taking');
+            displayQuestion();
+            startTimer();
+        }
+
+        function displayQuestion() {
+            if (currentQuizQuestions.length === 0) {
+                alert('Tidak ada soal yang tersedia.');
+                return;
+            }
+            
+            const question = currentQuizQuestions[currentQuestionIndex];
+            const totalQuestions = currentQuizQuestions.length;
+            
+            document.getElementById('question-number').textContent = `Pertanyaan ${currentQuestionIndex + 1}`;
+            document.getElementById('question-text').textContent = question.question;
+            document.getElementById('progress-text').textContent = `${currentQuestionIndex + 1} dari ${totalQuestions}`;
+            document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / totalQuestions) * 100}%`;
+            
+            // Clear previous selection
+            document.querySelectorAll('input[name="answer"]').forEach(input => {
+                input.checked = false;
+            });
+            
+            // Update options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = `
+                <label class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="radio" name="answer" value="A" class="text-emerald-600">
+                    <span>A. ${question.options.A}</span>
+                </label>
+                <label class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="radio" name="answer" value="B" class="text-emerald-600">
+                    <span>B. ${question.options.B}</span>
+                </label>
+                <label class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="radio" name="answer" value="C" class="text-emerald-600">
+                    <span>C. ${question.options.C}</span>
+                </label>
+                <label class="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="radio" name="answer" value="D" class="text-emerald-600">
+                    <span>D. ${question.options.D}</span>
+                </label>
+            `;
+            
+            // Restore previous answer if exists
+            if (userAnswers[currentQuestionIndex]) {
+                const radio = document.querySelector(`input[value="${userAnswers[currentQuestionIndex]}"]`);
+                if (radio) radio.checked = true;
+            }
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            document.getElementById('prev-btn').className = currentQuestionIndex === 0 
+                ? 'bg-gray-300 text-gray-700 px-6 py-3 rounded-lg cursor-not-allowed' 
+                : 'bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition-colors';
+            
+            if (currentQuestionIndex === totalQuestions - 1) {
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('finish-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('finish-btn').classList.add('hidden');
+            }
+        }
+
+        function nextQuestion() {
+            saveCurrentAnswer();
+            if (currentQuestionIndex < currentQuizQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            saveCurrentAnswer();
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function saveCurrentAnswer() {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (selectedAnswer) {
+                userAnswers[currentQuestionIndex] = selectedAnswer.value;
+            }
+        }
+
+        function startTimer() {
+            quizTimer = setInterval(function() {
+                timeRemaining--;
+                
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(quizTimer);
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function finishQuiz() {
+            saveCurrentAnswer();
+            clearInterval(quizTimer);
+            
+            if (currentQuizQuestions.length === 0) {
+                alert('Tidak ada soal untuk dievaluasi.');
+                return;
+            }
+            
+            // Calculate score
+            let correctAnswers = 0;
+            const totalQuestions = currentQuizQuestions.length;
+            
+            for (let i = 0; i < totalQuestions; i++) {
+                if (userAnswers[i] === currentQuizQuestions[i].correct) {
+                    correctAnswers++;
+                }
+            }
+            
+            const score = (correctAnswers / totalQuestions) * 100;
+            const totalTime = totalQuestions * 60;
+            const timeUsed = totalTime - timeRemaining;
+            const timeUsedMinutes = Math.floor(timeUsed / 60);
+            const timeUsedSeconds = timeUsed % 60;
+            
+            // Update summary
+            document.getElementById('summary-name').textContent = participantData.name;
+            document.getElementById('summary-nip').textContent = participantData.nip;
+            document.getElementById('summary-time').textContent = 
+                `${timeUsedMinutes}:${timeUsedSeconds.toString().padStart(2, '0')}`;
+            document.getElementById('summary-answered').textContent = 
+                `${userAnswers.filter(answer => answer !== null).length}/${totalQuestions}`;
+            
+            // Show completion screen
+            showSection('quiz-completed');
+            
+            // Add to results (in real app, this would be sent to server)
+            addParticipantResult({
+                ...participantData,
+                score: score,
+                timeUsed: `${timeUsedMinutes}:${timeUsedSeconds.toString().padStart(2, '0')}`,
+                answers: userAnswers,
+                completed: true,
+                totalQuestions: totalQuestions,
+                correctAnswers: correctAnswers
+            });
+        }
+
+        function addParticipantResult(result) {
+            // This would normally be sent to a server
+            console.log('Participant result:', result);
+        }
+
+        // Admin functions
+        function exportResults() {
+            showSuccessModal('Hasil ujian berhasil diekspor ke file Excel!');
+        }
+
+        function viewDetailResult(id) {
+            showSuccessModal('Menampilkan detail jawaban peserta...');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('success-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial active nav button
+            const firstNavBtn = document.querySelector('.nav-btn');
+            if (firstNavBtn) {
+                firstNavBtn.classList.add('border-b-2', 'border-emerald-400');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'984f040c6465960c',t:'MTc1ODg1MDQzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
